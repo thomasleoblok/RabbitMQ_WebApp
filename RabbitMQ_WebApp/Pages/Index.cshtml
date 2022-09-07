@@ -1,0 +1,41 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Tour Selection</h1>
+    <form method="post">
+    <div class="preference">
+        <label for="Name">Name</label>
+        <input type="text" name="Name" id="Name">
+    </div>
+
+    <div class="preference">
+        <label for="Email">Email</label>
+        <input type="text" name="Email" id="Email">
+    </div>
+
+    <div class="preference">
+        <select name="Tours">
+            <option value="">Choose one</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+    </div>
+
+    <div class="preference">
+        <label for="Book">Book</label>
+        <input type="radio" name="Book" id="Book">
+    </div>
+
+    <div class="preference">
+        <label for="Cancel">Cancel</label>
+        <input type="radio" name="Cancel" id="Cancel">
+    </div>
+
+    <input type="submit" name="Submit" />
+    </form>
+</div>
