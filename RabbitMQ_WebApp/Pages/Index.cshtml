@@ -38,4 +38,9 @@
 
     <input type="submit" name="Submit" />
     </form>
+
+    @foreach (var item in Model.Response)
+    {
+        <div>@item</div>
+    }
 </div>

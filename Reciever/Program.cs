@@ -14,7 +14,7 @@ using (var channel = connection.CreateModel())
 
     channel.QueueBind(queue: queueName,
                       exchange: "topic_logs",
-                      routingKey: "anonymous.info");
+                      routingKey: "#");
 
     Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
 
