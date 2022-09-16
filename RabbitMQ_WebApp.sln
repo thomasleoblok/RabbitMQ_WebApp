@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ_WebApp", "RabbitMQ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Receiver", "Reciever\Receiver.csproj", "{499FD8CF-E4F3-4868-9177-90DEE8C66269}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver_booking", "Receiver_booking\Receiver_booking.csproj", "{3A00095B-868D-4572-B744-2C37AFE432D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Receiver_booking", "Receiver_booking\Receiver_booking.csproj", "{3A00095B-868D-4572-B744-2C37AFE432D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPC", "RPC\RPC.csproj", "{881034C0-AFFF-4F4B-8FE5-EF3AFB29365E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3A00095B-868D-4572-B744-2C37AFE432D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A00095B-868D-4572-B744-2C37AFE432D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A00095B-868D-4572-B744-2C37AFE432D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{881034C0-AFFF-4F4B-8FE5-EF3AFB29365E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{881034C0-AFFF-4F4B-8FE5-EF3AFB29365E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{881034C0-AFFF-4F4B-8FE5-EF3AFB29365E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{881034C0-AFFF-4F4B-8FE5-EF3AFB29365E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

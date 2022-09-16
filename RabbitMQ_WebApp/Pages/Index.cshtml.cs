@@ -6,6 +6,8 @@ using System.Linq;
 using RabbitMQ.Client;
 using System.Text;
 using RabbitMQ.Client.Events;
+using System.Collections.Concurrent;
+using System.Threading.Channels;
 
 namespace RabbitMQ_WebApp.Pages
 {
@@ -13,18 +15,24 @@ namespace RabbitMQ_WebApp.Pages
     {
         public List<string> Response { get; set; } = new List<string>();
         private readonly ILogger<IndexModel> _logger;
+        private  IConnection connection;
+        private  IModel channel;
+        private  string replyQueueName;
+        private  EventingBasicConsumer consumer;
+        private  BlockingCollection<string> respQueue = new BlockingCollection<string>();
+        private  IBasicProperties props;
 
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
-           // Thread ListenerThread = new Thread(new ThreadStart(ListenToMessage));
-           // ListenerThread.Start();
-            ListenToMessage();
+            // Thread ListenerThread = new Thread(new ThreadStart(ListenToMessage));
+            // ListenerThread.Start();
+            Listen();
         }
 
         public void OnGet()
         {
-            
+
         }
 
         public void OnPost()
@@ -99,6 +107,7 @@ namespace RabbitMQ_WebApp.Pages
                         routingKey = "cancel.info";
                     }
                 }
+                Call(message);
 
                 var body = Encoding.UTF8.GetBytes(message);
                 channel.BasicPublish(exchange: "topic_logs",
@@ -133,9 +142,7 @@ namespace RabbitMQ_WebApp.Pages
 
                 channel.QueueBind(queue: queueName,
                       exchange: "topic_logs",
-                                  routingKey: "#");
-
-                PrintToScreen($"booking.response {DateTime.Now}");
+                                  routingKey: "booking.response");
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
@@ -143,18 +150,68 @@ namespace RabbitMQ_WebApp.Pages
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var routingKey = ea.RoutingKey;
+
                     PrintToScreen($" [x] Received '{routingKey}':'{message}'");
                 };
                 channel.BasicConsume(queue: queueName,
                                      autoAck: true,
                                      consumer: consumer);
-            }
 
+            }
         }
 
         private void PrintToScreen(string message)
         {
             Response.Add(message);
+        }
+
+        private void Listen()
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    respQueue.Add(response);
+                    Response.Add(response);
+                }
+            };
+
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+        }
+
+        public string Call(string message)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "rpc_queue",
+                basicProperties: props,
+                body: messageBytes);
+
+            return respQueue.Take();
+        }
+
+        public void Close()
+        {
+            connection.Close();
         }
     }
 }
