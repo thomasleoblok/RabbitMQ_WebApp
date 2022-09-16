@@ -116,7 +116,7 @@ namespace RabbitMQ_WebApp.Pages
 
                 };
                 channel.BasicConsume(queue: channel.QueueDeclare().QueueName,
-                                     autoAck: false,
+                                     autoAck: true,
                                      consumer: consumer);
             }
         }
@@ -133,7 +133,7 @@ namespace RabbitMQ_WebApp.Pages
 
                 channel.QueueBind(queue: queueName,
                       exchange: "topic_logs",
-                                  routingKey: "booking.response");
+                                  routingKey: "#");
 
                 PrintToScreen($"booking.response {DateTime.Now}");
 
@@ -146,7 +146,7 @@ namespace RabbitMQ_WebApp.Pages
                     PrintToScreen($" [x] Received '{routingKey}':'{message}'");
                 };
                 channel.BasicConsume(queue: queueName,
-                                     autoAck: false,
+                                     autoAck: true,
                                      consumer: consumer);
             }
 

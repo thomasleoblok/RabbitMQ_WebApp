@@ -35,7 +35,7 @@ namespace Receiver
                     SendResponse(message);
                 };
                 channel.BasicConsume(queue: queueName,
-                                     autoAck: false,
+                                     autoAck: true,
                                      consumer: consumer);
                 Console.WriteLine(" Press [enter] to exit.");
                 Console.ReadLine();
