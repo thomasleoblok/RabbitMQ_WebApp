@@ -17,13 +17,14 @@ namespace RabbitMQ_WebApp.Pages
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
-            Thread ListenerThread = new Thread(new ThreadStart(ListenToMessage));
-            ListenerThread.Start();
+           // Thread ListenerThread = new Thread(new ThreadStart(ListenToMessage));
+           // ListenerThread.Start();
+            ListenToMessage();
         }
 
         public void OnGet()
         {
-
+            
         }
 
         public void OnPost()
@@ -104,7 +105,7 @@ namespace RabbitMQ_WebApp.Pages
                                      routingKey: routingKey,
                                      basicProperties: null,
                                      body: body);
-                PrintToScreen($" [x] Sent '{routingKey}':'{message}'");
+                //PrintToScreen($" [x] Sent '{routingKey}':'{message}'");
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
@@ -134,7 +135,7 @@ namespace RabbitMQ_WebApp.Pages
                       exchange: "topic_logs",
                                   routingKey: "booking.response");
 
-                PrintToScreen("booking.response");
+                PrintToScreen($"booking.response {DateTime.Now}");
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
@@ -143,7 +144,6 @@ namespace RabbitMQ_WebApp.Pages
                     var message = Encoding.UTF8.GetString(body);
                     var routingKey = ea.RoutingKey;
                     PrintToScreen($" [x] Received '{routingKey}':'{message}'");
-                    PrintToScreen(message);
                 };
                 channel.BasicConsume(queue: queueName,
                                      autoAck: false,

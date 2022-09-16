@@ -51,7 +51,7 @@ namespace Receiver
             using (var channel = connection.CreateModel())
             {
                 var body = Encoding.UTF8.GetBytes("Dette er vores response:" + message.Split(".")[0]);
-                channel.BasicPublish(exchange: "topic_log",
+                channel.BasicPublish(exchange: "topic_logs",
                                      routingKey: "booking.reponse",
                                      basicProperties: null,
                                      body: body);
